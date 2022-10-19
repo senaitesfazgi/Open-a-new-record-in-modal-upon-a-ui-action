@@ -1,0 +1,33 @@
+function requestHelpForm() {
+    var sProcessTask = g_form.getUniqueValue();
+    g_form.addInfoMessage('Help request task is created. Click back arrow or update to go to the questionnaire form');
+
+    var ga = new GlideAjax('GetServiceProcessTaskInfo');
+    ga.addParam('sysparm_name', 'getServiceProcessTask');
+    ga.addParam('sys_id', sProcessTask);
+    ga.getXML(renderForm);
+}
+
+function renderForm(response) {
+    var answer = response.responseXML.documentElement.getAttribute("answer");
+
+    var obj = JSON.parse(answer);
+    var business_service = obj.business_service;
+    var map_url = obj.map_url;
+	var assigned_to = obj.assigned_to;
+    //g_form.addInfoMessage('This task is part of ' + assigned_to);
+
+    //Display the new task record in modal
+
+    var d = new GlideModalForm('Request help on your task', 'service_process_task', createHelpTask);
+    d.addParm('sysparm_query', 'business_service=' + business_service + '^map_url=' + map_url + '^assigned_to=' + assigned_to);
+    d.setSysID(-1);
+    d.render();
+}
+
+function createHelpTask(action, sys_id, table, displayValue) {
+    //set value on form to new sysid of update set
+    g_form.setValue('service_process_task', sys_id);
+}
+
+// Source Link: https://pathwayscg.com/quick-dialog-boxes-with-showquickform-and-glidemodalform/
