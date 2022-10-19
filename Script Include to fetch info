@@ -13,11 +13,6 @@ GetServiceProcessTaskInfo.prototype = Object.extendsObject(AbstractAjaxProcessor
             obj.assigned_to = Task.opened_by.toString();
             obj.number = Task.number.toString();
         }
-        //Add info message on parent record and add notes on the work notes
-        Task.work_notes = 'New help request task is created';
-		Task.state = -5;
-        Task.update();
-        //gs.addInfoMessage('Help request task is created. Click back arrow or update to go to the questionnaire form');
         return JSON.stringify(obj);
     },
 
