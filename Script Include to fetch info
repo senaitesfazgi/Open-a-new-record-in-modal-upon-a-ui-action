@@ -1,0 +1,28 @@
+var GetServiceProcessTaskInfo = Class.create();
+GetServiceProcessTaskInfo.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+
+    getServiceProcessTask: function() {
+
+        var obj = {};
+        var sProcessTask = this.getParameter('sys_id');
+        var Task = new GlideRecord('service_process_task');
+
+        if (Task.get(sProcessTask)) {
+            obj.business_service = Task.business_service.toString();
+            obj.map_url = Task.map_url.toString();
+            obj.assigned_to = Task.opened_by.toString();
+            obj.number = Task.number.toString();
+        }
+        //Add info message on parent record and add notes on the work notes
+        Task.work_notes = 'New help request task is created';
+		Task.state = -5;
+        Task.update();
+        //gs.addInfoMessage('Help request task is created. Click back arrow or update to go to the questionnaire form');
+        return JSON.stringify(obj);
+    },
+
+    type: 'GetServiceProcessTaskInfo'
+});
+
+
+//Source Link: https://pathwayscg.com/quick-dialog-boxes-with-showquickform-and-glidemodalform/
